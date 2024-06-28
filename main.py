@@ -112,8 +112,8 @@ rs = 2/100
 sigma_rb = 0.5/1000
 sigma_rs = 0.5/1000
 
-A = pi*rb**2
-sigma_A = gauss("pi*rb**2")
+A = pi*rb**2/4
+sigma_A = gauss("pi*rb**2/4")
 #messschieber, annahme 0.5mm fhler
 
 #Raumtemp am Anfang
@@ -133,12 +133,33 @@ T1 = matrix("""
 """)
 
 U1 = matrix("""
-0.365
-0.124
-0.348
+0.365;
+0.124;
+0.348;
 0.133
 """)#schwarz, glänzend, weis, matt
+U1 = toArray(U1)
 
+temp0 = U1[0]
+sigma_temp0 = 0.2*temp0
+
+temp1 = U1[1]
+sigma_temp1 = U1[1]
+
+temp2 = U1[2]
+sigma_temp2 = U1[2]
+
+temp3 = U1[3]
+sigma_temp3 = U1[3]
+
+Qgl1 = temp1/temp0
+sigma_Qgl1 = gauss("temp1/temp0")
+
+Qwe1 = temp2/temp0
+sigma_Qwe1 = gauss("temp2/temp0")
+
+Qma1 = temp3/temp0
+sigma_Qma1 = gauss("temp3/temp0")
 
 T2 = matrix("""
 79.8
@@ -148,13 +169,43 @@ T2 = matrix("""
 """)
 
 U2 = matrix("""
-0.351
-0.12
-0.337
+0.351;
+0.12;
+0.337;
 0.136
 """)#schwarz, glänzend, weis, matt
 
+U2 = toArray(U2)
 
+temp0 = U2[0]
+sigma_temp0 = 0.2*temp0
+
+temp1 = U2[1]
+sigma_temp1 = U2[1]
+
+temp2 = U2[2]
+sigma_temp2 = U2[2]
+
+temp3 = U2[3]
+sigma_temp3 = U2[3]
+
+Qgl2 = temp1/temp0
+sigma_Qgl2 = gauss("temp1/temp0")
+
+Qwe2 = temp2/temp0
+sigma_Qwe2 = gauss("temp2/temp0")
+
+Qma2 = temp3/temp0
+sigma_Qma2 = gauss("temp3/temp0")
+
+Qgl = (Qgl1 + Qgl2)/2
+sigma_Qgl = gauss("(Qgl1 + Qgl2)/2")
+
+Qwe = (Qwe1 + Qwe2)/2
+sigma_Qwe = gauss("(Qwe1 + Qwe2)/2")
+
+Qma = (Qma1 + Qma2)/2
+sigma_Qma = gauss("(Qma1 + Qma2)/2")
 
 #r^2 abhängigkeit
 
@@ -271,6 +322,7 @@ steig = optimizedParameters1[0]*10**9
 sigma_steig = np.diag(s)[0]*10**9
 
 sigma = (pi*r**2)/(0.16*1000*A**2*steig)
+sigma_sigma = gauss("(pi*r**2)/(0.16*1000*A**2*steig)")
 
 
 #glühbirne
@@ -339,6 +391,9 @@ grid()
 plt.tight_layout()
 savefig('birnelog')
 show()
+
+birneexp = optimizedParameters1[0]
+sigma_birneexp = np.diag(s)[0]
 
 
 
